@@ -1,4 +1,3 @@
-# financial-management-v2
 # 财务管理系统
 ## 主要技术: springboot + springsecurity + mysql + mybatis-plus + thymeleaf + jQuery + layuimini + Tablesaw 
 ## 描述:
