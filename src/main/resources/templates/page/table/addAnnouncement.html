@@ -1,0 +1,89 @@
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+<div class="layuimini-main">
+
+    <form class="layui-form" action="">
+
+        <!--姓名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">主题</label>
+            <div class="layui-input-block">
+                <input id="nid" type="text" name="topic" lay-verify="required" lay-reqtext="必填项" autocomplete="off"
+                       placeholder="请输入主题" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input type="date" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item t">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea name="content" id="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <!--提交重置-->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token =$("meta[name='_csrf']").attr("content");
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            $.ajax({
+                url: '[[${#httpServletRequest.getContextPath()}]]/addNotice',
+                method: 'post',
+                data: data["field"],
+                datatype: "json",
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                //请求的页面响应成功，则进行处理：
+                success: function (res) {
+                    console.log(res)
+                    if (res === 'success') {
+                        layer.msg("添加成功", {icon: 1, time: 1000}, function () {
+                            location.reload()
+                            return false;
+                        });
+                    } else {
+                        layer.msg("提交失败:" + res.msg);
+                        return false;
+                    }
+                },
+                //请求的页面响应失败，则进行处理：
+                error: function (xhr) {
+                    layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                        location.reload();
+                    });
+                    return false;
+                }
+            })
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,259 @@
+<style>
+    .welcome .layui-card {border:1px solid #f2f2f2;border-radius:5px;}
+    .welcome .icon {margin-right:10px;color:#1aa094;}
+    .welcome .icon-cray {color:#ffb800 !important;}
+    .welcome .icon-blue {color:#1e9fff !important;}
+    .welcome .icon-tip {color:#ff5722 !important;}
+    .welcome .layuimini-qiuck-module {text-align:center;margin-top:10px}
+    .welcome .layuimini-qiuck-module a i {display:inline-block;width:100%;height:60px;line-height:60px;text-align:center;border-radius:2px;font-size:30px;background-color:#F8F8F8;color:#333;transition:all .3s;-webkit-transition:all .3s;}
+    .welcome .layuimini-qiuck-module a cite {position:relative;top:2px;display:block;color:#666;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;font-size:14px;}
+    .welcome .welcome-module {width:100%;height:210px;}
+    .welcome .panel {background-color:#fff;border:1px solid transparent;border-radius:3px;-webkit-box-shadow:0 1px 1px rgba(0,0,0,.05);box-shadow:0 1px 1px rgba(0,0,0,.05)}
+    .welcome .panel-body {padding:10px}
+    .welcome .panel-title {margin-top:0;margin-bottom:0;font-size:12px;color:inherit}
+    .welcome .label {display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:700;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em;margin-top:.3em;}
+    .welcome .layui-red {color:red}
+    .welcome .main_btn > p {height:40px;}
+    .welcome .layui-bg-number {background-color:#F8F8F8;}
+    .welcome .layuimini-notice:hover {background:#f6f6f6;}
+    .welcome .layuimini-notice {padding:7px 16px;clear:both;font-size:12px !important;cursor:pointer;position:relative;transition:background 0.2s ease-in-out;}
+    .welcome .layuimini-notice-title,.layuimini-notice-label {padding-right:70px !important;text-overflow:ellipsis !important;overflow:hidden !important;white-space:nowrap !important;}
+    .welcome .layuimini-notice-title {line-height:28px;font-size:14px;}
+    .welcome .layuimini-notice-extra {position:absolute;top:50%;margin-top:-8px;right:16px;display:inline-block;height:16px;color:#999;}
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main welcome">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+                            <div class="layui-card-body">
+                                <div class="welcome-module">
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs6">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-blue">实时</span>
+                                                        <h5>总支出</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 id="totalExpenses" class="no-margins">1234</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-cyan">实时</span>
+                                                        <h5>总收入</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 id="totalRevenue" class="no-margins">1234</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-orange">实时</span>
+                                                        <h5>项目总数</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 id="totalProject" class="no-margins">1234</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-green">实时</span>
+                                                        <h5>员工数量</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 id="totalEmp" class="no-margins">1234</h1>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>快捷入口</div>
+                            <div class="layui-card-body">
+                                <div class="welcome-module">
+                                    <div class="layui-row layui-col-space10 layuimini-qiuck">
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/allDepartment.html" data-title="部门信息" data-icon="fa fa-window-maximize">
+                                                <i class="fa fa-window-maximize"></i>
+                                                <cite>部门信息</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/employee.html" data-title="员工信息" data-icon="fa fa-gears">
+                                                <i class="fa fa-gears"></i>
+                                                <cite>员工信息</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/announcement.html" data-title="公告管理" data-icon="fa fa-file-text">
+                                                <i class="fa fa-file-text"></i>
+                                                <cite>公告管理</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/processedBill.html" data-title="查看账单" data-icon="fa fa-dot-circle-o">
+                                                <i class="fa fa-dot-circle-o"></i>
+                                                <cite>查看账单</cite>
+                                            </a>
+                                        </div>
+                                       <!-- <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/form.html" data-title="表单示例" data-icon="fa fa-calendar">
+                                                <i class="fa fa-calendar"></i>
+                                                <cite>修改密码</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/404.html" data-title="404页面" data-icon="fa fa-hourglass-end">
+                                                <i class="fa fa-hourglass-end"></i>
+                                                <cite>404页面</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/button.html" data-title="按钮示例" data-icon="fa fa-snowflake-o">
+                                                <i class="fa fa-snowflake-o"></i>
+                                                <cite>按钮示例</cite>
+                                            </a>
+                                        </div>
+                                        <div class="layui-col-xs3 layuimini-qiuck-module">
+                                            <a href="javascript:;" layuimini-content-href="page/layer.html" data-title="弹出层" data-icon="fa fa-shield">
+                                                <i class="fa fa-shield"></i>
+                                                <cite>弹出层</cite>
+                                            </a>
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>报表统计</div>
+                            <div id="spendingRatio" class="layui-card-body">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-credit-card icon icon-blue"></i>报表统计</div>
+                            <div id="incomeRatio" class="layui-card-body">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer','echarts'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            echarts = layui.echarts;
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]/EmpNums",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#totalEmp").html(data)
+            },
+            //请求的页面响应失败，则进行处理：
+            error: function (xhr) {
+                layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                    location.reload();
+                });
+                return false;
+            }
+        })
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]/totalProject",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#totalProject").html(data)
+            },
+            //请求的页面响应失败，则进行处理：
+            error: function (xhr) {
+                layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                    location.reload();
+                });
+                return false;
+            }
+        })
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]/totalRevenue",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#totalRevenue").html(data)
+            },
+            //请求的页面响应失败，则进行处理：
+            error: function (xhr) {
+                layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                    location.reload();
+                });
+                return false;
+            }
+        })
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]/totalExpenses",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#totalExpenses").html(data)
+            },
+            //请求的页面响应失败，则进行处理：
+            error: function (xhr) {
+                layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                    location.reload();
+                });
+                return false;
+            }
+        })
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]" + "/depCompared",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#spendingRatio").html(data)
+            }
+        })
+        $.ajax({
+            url: "[[${#httpServletRequest.getContextPath()}]]" + "/depRevenue",
+            method: "get",
+            datatype: "json",
+            success: function (data) {
+                $("#incomeRatio").html(data)
+            }
+        })
+    });
+</script>

@@ -1,0 +1,64 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "page/welcome-3.html"
+  },
+  "logoInfo": {
+    "title": "LAYUI MINI",
+    "image": "images/logo4.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "查看",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "部门信息",
+          "href": "page/allDepartment.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "员工信息",
+          "href": "page/employee.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "账单提交",
+          "href": "page/billCommit.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "查看公告",
+          "href": "page/announcement.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "查看账单",
+          "icon": "fa fa-address-book",
+          "icon": "fa fa-file-text",
+          "target": "_self",
+          "child": [
+            {
+              "title": " 未处理账单",
+              "href": "page/untreatedBill.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "已处理账单",
+              "href": "page/processedBill.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            }
+          ]
+        }
+    ]}
+  ]
+}

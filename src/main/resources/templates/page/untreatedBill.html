@@ -1,0 +1,174 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-sm data-count-edit" lay-event="passed">通过</a>
+            <a class="layui-btn layui-btn-sm layui-btn-danger data-count-delete" lay-event="rejected">驳回</a>
+        </script>
+        <script type="text/html" id="billImg">
+            <img title="点击放大" onclick="imageL(this.src)" style="width: 80px;height: 30px" th:src="@{&#123;&#123;d.bimage&#125;&#125;}">
+        </script>
+    </div>
+</div>
+<form id="reasonForm" style="display: none" class="layui-form" action="" >
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">驳回原因</label>
+        <div class="layui-input-block">
+            <textarea id="reasonData" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['form', 'table', 'miniPage', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        function col() {
+            if([[${#authorization.expression('hasRole(''admin'')')}]]){
+               return [
+                    [
+                        {field: 'bname',  title: '概要'},
+                        {field: 'dname',  title: '概要'},
+                        {field: 'bpay', title: '金额', sort: true},
+                        {field: 'bimage', title: '图片(点击放大查看)',templet:"#billImg"},
+                        {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                    ]
+                ]
+            }else{
+                return [
+                    [
+                        {field: 'bname',  title: '概要'},
+                        {field: 'dname',  title: '概要'},
+                        {field: 'bpay', title: '金额', sort: true},
+                        {field: 'bimage', title: '图片(点击放大查看)',templet:"#billImg"},
+                    ]
+                ]
+            }
+
+        }
+        table.render({
+            elem: '#currentTableId',
+            url: '[[${#httpServletRequest.getContextPath()}]]/allUntreatedBill',
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+                };
+            },
+            cols: col(),
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+            skin: 'line'
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'passed') {
+                layer.open({
+                    type: 0
+                    , title: "确认通过"
+                    , offset: "auto" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                    , id: 'layerDemo' + 1 //防止重复弹出
+                    , content: "是否通过审核"
+                    , btn: ['是', '否']
+                    , yes(index, layero) {
+                        $.ajax({
+                            url: "[[${#httpServletRequest.getContextPath()}]]/passThrough",
+                            method: "post",
+                            data: {
+                                bid: data.bid,
+                            },
+                            datatype: "json",
+                            success: function (data) {
+                                //根据后台返回的参数，来进行判断
+                                if (data != null) {
+                                    layer.alert('提交成功', {icon: 1, title: '提示'}, function (i) {
+                                        layer.close(i);
+                                        layer.close(index);//关闭弹出层
+                                        window.parent.location.reload();//刷新父页面
+                                    })
+                                }
+                            }
+                        })
+                    }
+                    , btn2: function () {
+                        layer.closeAll();
+                    }
+                    , btnAlign: 'c' //按钮居中
+                    , shade: 0 //不显示遮罩
+                });
+                return false;
+            } else if (obj.event === 'rejected') {
+                    layer.open({
+                        type: 1
+                        , title: "填写驳回原因"
+                        , area: ['480px', '250px']
+                        , offset: "auto" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        , id: 'layerDemo' + 1 //防止重复弹出
+                        ,resize:false
+                        , content:$("#reasonForm")
+                        , btn: ['是', '否']
+                        , yes(index, layero) {
+                            reasonData= $("#reasonData").val();
+                            $.ajax({
+                                url: "[[${#httpServletRequest.getContextPath()}]]/rejected",
+                                method: "post",
+                                data: {
+                                    bid: data.bid,
+                                    reason:reasonData
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    //根据后台返回的参数，来进行判断
+                                    if (data != null) {
+                                        layer.alert('驳回成功', {icon: 1, title: '提示'}, function (i) {
+                                            layer.close(i);
+                                            layer.close(index);//关闭弹出层
+                                            window.parent.location.reload();//刷新父页面
+                                        })
+                                    }
+                                }
+                            })
+                        }
+                        , btn2: function () {
+                            layer.closeAll();
+                        }
+                        , btnAlign: 'c' //按钮居中
+                        , shade: 0 //不显示遮罩
+                    });
+                return false;
+            }
+        });
+
+    });
+    function imageL(src1) {
+        $=layui.$
+        // layer.photos({photos: {"data": [{"src": src1}]}, anim: 5});
+        layer.open({
+            type: 1
+            ,title:""
+            , offset:  ['100px', '300px'] //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + 1 //防止重复弹出
+            , skin: 'layui-layer-nobg'//没有背景色
+            , content: "<img style='border:1px solid gray;' src="+src1+ "/>"
+            , shadeClose: true//不显示遮罩
+            ,anim: 5
+        });
+    }
+</script>

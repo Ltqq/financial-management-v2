@@ -1,0 +1,129 @@
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <form class="layui-form" id="fm" action="" enctype="multipart/form-data">
+            <!--账单详情-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">账单详情</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bname" lay-verify="required" lay-reqtext="必填项" autocomplete="off"
+                           placeholder="请输入账单详情" class="layui-input">
+                </div>
+            </div>
+            <!--账单数额-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">账单金额</label>
+                <div class="layui-input-block">
+                    <input type="text" name="bpay" lay-verify="required|Ndouble" lay-reqtext="必填项" autocomplete="off"
+                           placeholder="请输入账单金额" class="layui-input">
+                </div>
+            </div>
+            <!--选择部门-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择部门</label>
+                <div class="layui-input-block">
+                    <select id="doc-select-1" name="departmentId">
+
+                    </select>
+                </div>
+            </div>
+            <!--图片-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择图片</label>
+                <div class="layui-input-block">
+                    <input type="file" name="file" lay-verify="required" lay-reqtext="图片必须提交" autocomplete="off">
+                </div>
+            </div>
+            <!--提交重置-->
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button id="test2" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<button id="test3"></button>
+<script>
+
+    layui.use(['form', 'layer'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , $ = layui.$
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+        //自定义验证规则
+        form.verify({
+            Ndouble: [
+                /^[1-9]\d*$/
+                , '只能输入整数'
+            ]
+        });
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token = $("meta[name='_csrf']").attr("content");
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var formData = new FormData($("#fm")[0]);
+            $.ajax({
+                url: '[[${#httpServletRequest.getContextPath()}]]/commit',
+                method: 'post',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                //请求的页面响应成功，则进行处理：
+                success: function (res) {
+                    console.log(res)
+                    if (res === '1') {
+                        layer.msg("提交成功", {icon: 1, time: 1000}, function () {
+                            location.reload()
+                            return false;
+                        });
+                    } else {
+                        layer.msg("提交失败:" + res.msg);
+                        return false;
+                    }
+                },
+                //请求的页面响应失败，则进行处理：
+                error: function (data) {
+                    layer.msg(xhr.status + "\n" + xhr.statusText, function () {
+                        location.reload();
+                    });
+                    return false;
+                }
+            })
+            return false;
+        });
+
+    });
+    var $ = layui.$;
+    $("#doc-select-1").empty()
+    $.ajax({
+        url: "[[${#httpServletRequest.getContextPath()}]]/allDepName",
+        method: "get",
+        datatype: "json",
+        success: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                $("#doc-select-1").append("" +
+                    "<option name=\"departmentId\" value=\"" + data[i].did + "\">" + data[i].dname + "</option>")
+            }
+            layui.use('form', function () {
+                var form = layui.form;
+                form.render("select");
+            })
+        }
+    })
+
+
+</script>

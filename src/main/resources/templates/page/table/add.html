@@ -1,0 +1,234 @@
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
+<div class="layuimini-main">
+
+    <form class="layui-form" action="" >
+
+        <!--姓名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <!--隐藏id-->
+                <input id="eid" type="text" name="eid" style="display: none">
+                <input id="ename" type="text" name="ename" lay-verify="required" lay-reqtext="必填项" autocomplete="off"
+                       placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input id="email" type="text" name="email" lay-verify="email" lay-reqtext="必填项" autocomplete="off"
+                       placeholder="请输入邮箱" class="layui-input">
+            </div>
+        </div>
+
+        <!--性别-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input id="male" type="radio" name="sex" value="男" title="男" checked="">
+                <input id="female" type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+        <!--密码-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-block">
+                <input id="password" type="text" name="password" lay-verify="required" lay-reqtext="必填项" autocomplete="off"
+                       placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <!--入职时间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证日期</label>
+            <div class="layui-input-inline">
+                <input  type="date" name="entryDate" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <!--工资-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">工资</label>
+            <div class="layui-input-block">
+                <input id="basicSalary" type="text" name="basicSalary" lay-verify="required|Ndouble" lay-reqtext="必填项" autocomplete="off"
+                       placeholder="请输入工资" class="layui-input">
+            </div>
+        </div>
+        <!--选择部门-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择部门</label>
+            <div class="layui-input-block">
+                <select id="doc-select-1" name="departmentId">
+
+                </select>
+            </div>
+        </div>
+        <!--选择职位-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择职位</label>
+            <div class="layui-input-block">
+                <select id="doc-select-2" name="positionId">
+
+                </select>
+            </div>
+        </div>
+        <!--提交重置-->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script>
+
+    if (edit=="none") {
+    } else {
+        $ = layui.$
+        $("#eid").val(edit["eid"])
+        $("#ename").val(edit["ename"])
+        $("#email").val(edit["email"])
+        if(edit["sex"]=="男"){
+            $("#male").prop("checked","true")
+        }else {
+            $("#female").prop("checked","true")
+        }
+        $("#password").val(edit["password"])
+        $("#date").val(edit["entryDate"])
+        $("#basicSalary").val(edit["basicSalary"])
+    }
+
+    layui.use(['form', 'table'], function () {
+
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token =$("meta[name='_csrf']").attr("content");
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+
+        //自定义验证规则
+        form.verify({
+            Ndouble: [
+                /^[1-9]\d*$/
+                , '只能输入整数'
+            ]
+        });
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+           console.log(data["field"])
+            if(edit==="none"){
+                edit = "none";
+                $.ajax({
+                    url: '[[${#httpServletRequest.getContextPath()}]]/addEmp',
+                    method: 'post',
+                    data: data["field"],
+                    datatype: "json",
+                    //请求的页面响应成功，则进行处理：
+                    beforeSend : function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+                        console.log(res)
+                        if (res ==='success') {
+                            layer.msg("添加成功", {icon: 1, time: 1000}, function () {
+                                location.reload()
+                                return false;
+                            });
+                        } else {
+                            layer.msg("提交失败:" + res.msg);
+                            return false;
+                        }
+                    },
+                    //请求的页面响应失败，则进行处理：
+                    error: function (xhr) {
+                        layer.msg(xhr.status+"\n"+xhr.statusText, function () {
+                            location.reload();
+                        });
+                        return false;
+                    }
+                })
+                return false;
+            }else {
+                edit = "none";
+                $.ajax({
+                    url: '[[${#httpServletRequest.getContextPath()}]]/updateEmp',
+                    method: 'post',
+                    data: data["field"],
+                    datatype: "json",
+                    beforeSend : function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    //请求的页面响应成功，则进行处理：
+                    success: function (res) {
+                        console.log(res)
+                        if (res ==='success') {
+                            layer.msg("修改成功", {icon: 1, time: 1000}, function () {
+                                location.reload()
+                                return false;
+                            });
+                        } else {
+                            layer.msg("提交失败:" + res.msg);
+                            return false;
+                        }
+                    },
+                    //请求的页面响应失败，则进行处理：
+                    error: function (xhr) {
+                        layer.msg(xhr.status+"\n"+xhr.statusText, function () {
+                            location.reload();
+                        });
+                        return false;
+                    }
+                })
+                return false;
+            }
+            return false;
+        });
+
+
+
+    });
+    $ = layui.$
+    $("#doc-select-1").empty()
+    $.ajax({
+        url: "[[${#httpServletRequest.getContextPath()}]]/allDepName",
+        method: "get",
+        datatype: "json",
+        success: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                $("#doc-select-1").append("" +
+                    "<option name=\"positionId\" value=\"" + data[i].did + "\">" + data[i].dname + "</option>")
+            }
+            layui.use('form',function(){
+                var form=layui.form;
+                form.render("select");
+            })
+
+        }
+    })
+    $("#doc-select-1").empty()
+    $.ajax({
+        url: "[[${#httpServletRequest.getContextPath()}]]/allPName",
+        method: "get",
+        datatype: "json",
+        success: function (data) {
+            for (let i = 0; i < data.length; i++) {
+                $("#doc-select-2").append("" +
+                    "<option name=\"positionId\" value=\"" + data[i].pid + "\">" + data[i].pname + "</option>")
+            }
+            layui.use('form',function(){
+                var form=layui.form;
+                form.render("select");
+            })
+        }
+    })
+</script>

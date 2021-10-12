@@ -1,0 +1,58 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "welcome-1.html"
+  },
+  "logoInfo": {
+    "title": "Financial Management System",
+    "image": "images/logo4.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "部门信息",
+          "href": "page/allDepartment.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "员工管理",
+          "href": "page/employee.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },{
+          "title": "公告管理",
+          "href": "page/announcement.html",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "查看账单",
+          "icon": "fa fa-address-book",
+          "icon": "fa fa-file-text",
+          "target": "_self",
+          "child": [
+            {
+              "title": " 未处理账单",
+              "href": "page/untreatedBill.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            },
+            {
+              "title": "已处理账单",
+              "href": "page/processedBill.html",
+              "icon": "fa fa-file-text",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

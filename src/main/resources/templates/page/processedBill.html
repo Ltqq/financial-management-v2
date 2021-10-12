@@ -1,0 +1,125 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-sm layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+        <script type="text/html" id="billImg">
+            <img title="点击放大" onclick="imageL(this.src)" style="width: 80px;height: 30px"
+                 th:src="@{&#123;&#123;d.bimage&#125;&#125;}">
+        </script>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table', 'miniPage', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        function col() {
+            if([[${#authorization.expression('hasRole(''admin'')')}]]){
+               return [
+                    [
+                        {field: 'bname', title: '概要'},
+                        {field: 'dname', title: '概要'},
+                        {field: 'bpay', title: '金额', sort: true},
+                        {field: 'bimage', title: '图片(点击放大查看)', templet: "#billImg"},
+                        {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                    ]
+                ]
+            }else{
+                return  [
+                    [
+                        {field: 'bname', title: '概要'},
+                        {field: 'dname', title: '概要'},
+                        {field: 'bpay', title: '金额', sort: true},
+                        {field: 'bimage', title: '图片(点击放大查看)', templet: "#billImg"},
+                    ]
+                ]
+            }
+        }
+        table.render({
+            elem: '#currentTableId',
+            url: '[[${#httpServletRequest.getContextPath()}]]/allProcessedBill',
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+                };
+            },
+            cols:col(),
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+            skin: 'line'
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            layer.open({
+                type: 0
+                , title: "确认删除"
+                , offset: "auto" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                , id: 'layerDemo' + 1 //防止重复弹出
+                , content: "是否删除"
+                , btn: ['是', '否']
+                , yes(index, layero) {
+                    $.ajax({
+                        url: "[[${#httpServletRequest.getContextPath()}]]/deleteBill",
+                        method: "post",
+                        data: {
+                            bid: data.bid,
+                        },
+                        datatype: "json",
+                        success: function (data) {
+                            //根据后台返回的参数，来进行判断
+                            if (data != null) {
+                                layer.alert('删除成功', {icon: 1, title: '提示'}, function (i) {
+                                    layer.close(i);
+                                    layer.close(index);//关闭弹出层
+                                    window.parent.location.reload();//刷新父页面
+                                })
+                            }
+                        }
+                    })
+                }
+                , btn2: function () {
+                    layer.closeAll();
+                }
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+            });
+            return false;
+        });
+
+    });
+
+    function imageL(src1) {
+        $ = layui.$
+        // layer.photos({photos: {"data": [{"src": src1}]}, anim: 5});
+        layer.open({
+            type: 1
+            , title: ""
+            , offset: ['100px', '300px'] //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+            , id: 'layerDemo' + 1 //防止重复弹出
+            , skin: 'layui-layer-nobg'//没有背景色
+            , content: "<img style='border:1px solid gray;' src=" + src1 + "/>"
+            , shadeClose: true//不显示遮罩
+            , anim: 5
+        });
+    }
+</script>

@@ -1,0 +1,58 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+        <a href="javascript:;" id="go" data-title="部门信息" layuimini-content-href="page/department.html"></a>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <script type="text/html" id="currentTableBar">
+
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">查看详细信息</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table', 'miniPage', 'miniTab', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            element = layui.element,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+
+        table.render({
+            elem: '#currentTableId',
+            url: '[[${#httpServletRequest.getContextPath()}]]/allDep',
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
+                    "data": res.data//解析数据列表
+                };
+            },
+            cols: [
+                [
+                    {field: 'did', width: 80, title: 'ID', sort: true},
+                    {field: 'dname', width: 150, title: '部门名称', align: "center"},
+                    {field: 'ecount', width: 150, title: '部门人数', align: "center", sort: true},
+                    {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
+                ]
+            ],
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            var did = data.did;
+            $("#go").attr("layuimini-content-href","page/department.html?did="+did)
+            $("#go").click();
+        });
+
+
+    });
+</script>
