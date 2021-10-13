@@ -62,7 +62,9 @@ public class EmployeeController {
                 employeeQueryWrapper = new QueryWrapper<>();
                 employeeQueryWrapper.eq("department_id", did);
                 empVOS = employeeService.EmpVODep(page, limit, eid, did);
-                count = empVOS.size();
+                employeeQueryWrapper = new QueryWrapper<>();
+                employeeQueryWrapper.eq("department_id", did);
+                count = employeeService.count(employeeQueryWrapper);
             }
             default -> {
                 empVOS = null;

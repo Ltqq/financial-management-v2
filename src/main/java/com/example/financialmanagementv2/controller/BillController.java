@@ -61,7 +61,7 @@ public class BillController {
 
         switch (auths.get().toString()) {
             case "ROLE_admin" -> {billVOS = billService.NoBillVOPage(page, limit,null);
-                count = allNoProcessedBillNums();
+                count = allNoProcessedBillNums(null);
             }
             case "ROLE_部门主管" -> {
                 employeeQueryWrapper.eq("email", email);
@@ -69,7 +69,7 @@ public class BillController {
                 Map<String, Object> map = employeeService.getMap(employeeQueryWrapper);
                 int did = (int) map.get("department_id");
                 billVOS = billService.NoBillVOPage(page, limit, did);
-                count = billVOS.size();
+                count = allNoProcessedBillNums(did);
             }
             default -> {
                 billVOS = null;
@@ -81,11 +81,7 @@ public class BillController {
         return table;
     }
 
-    public Long allUntreatedBillNums() {
-        QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "未处理");
-        return billService.count(queryWrapper);
-    }
+
 
     @GetMapping("/allProcessedBill")
     @ResponseBody
@@ -102,7 +98,7 @@ public class BillController {
 
         switch (auths.get().toString()) {
             case "ROLE_admin" -> {billVOS = billService.YBillVOPage(page, limit,null);
-            count = allProcessedBillNums();
+            count = allProcessedBillNums(null);
             }
             case "ROLE_部门主管" -> {
                 employeeQueryWrapper.eq("email", email);
@@ -110,7 +106,7 @@ public class BillController {
                 Map<String, Object> map = employeeService.getMap(employeeQueryWrapper);
                 int did = (int) map.get("department_id");
                 billVOS = billService.YBillVOPage(page, limit, did);
-                count = billVOS.size();
+                count = allProcessedBillNums(did);
             }
             default -> {
                 billVOS = null;
@@ -122,18 +118,33 @@ public class BillController {
         return table;
     }
 
-    public Long allProcessedBillNums() {
-        QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "已处理");
-        return billService.count(queryWrapper);
+    public Long allProcessedBillNums(Integer did) {
+        if(did==null){
+            QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status", "已处理");
+            return billService.count(queryWrapper);
+        }else {
+            QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status", "已处理");
+            queryWrapper.eq("department_id", did);
+            return billService.count(queryWrapper);
+        }
+
     }
-    public Long allNoProcessedBillNums() {
-        QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "未处理");
-        return billService.count(queryWrapper);
+    public Long allNoProcessedBillNums(Integer did) {
+        if(did==null){
+            QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status", "未处理");
+            return billService.count(queryWrapper);
+        }else {
+            QueryWrapper<Bill> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status", "未处理");
+            queryWrapper.eq("department_id", did);
+            return billService.count(queryWrapper);
+        }
     }
 
-    @PostMapping("/passThrough")
+    @GetMapping("/passThrough")
     @ResponseBody
     @ApiOperation("通过bill申请")
     public String passThrough(int bid) {
@@ -156,7 +167,7 @@ public class BillController {
         return "success";
     }
 
-    @PostMapping("/deleteBill")
+    @GetMapping("/deleteBill")
     @ResponseBody
     @ApiOperation("管理员bill删除记录")
     public String deleteBill(int bid) {

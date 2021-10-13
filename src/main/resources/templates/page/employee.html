@@ -1,3 +1,5 @@
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
 <div class="layuimini-container layuimini-page-anim">
     <div class="layuimini-main">
 
@@ -34,6 +36,8 @@
             form = layui.form,
             table = layui.table,
             miniPage = layui.miniPage;
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token =$("meta[name='_csrf']").attr("content");
         function col() {
             if ([[${#authorization.expression('hasRole(''admin'')')}]]) {
                 return [
@@ -172,6 +176,9 @@
                         method: 'post',
                         data: {eid: data["eid"]},
                         datatype: "json",
+                        beforeSend : function(xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
                         //请求的页面响应成功，则进行处理：
                         success: function (res) {
                             console.log(res)

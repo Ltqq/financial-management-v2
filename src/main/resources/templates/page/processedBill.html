@@ -80,7 +80,7 @@
                 , yes(index, layero) {
                     $.ajax({
                         url: "[[${#httpServletRequest.getContextPath()}]]/deleteBill",
-                        method: "post",
+                        method: "get",
                         data: {
                             bid: data.bid,
                         },

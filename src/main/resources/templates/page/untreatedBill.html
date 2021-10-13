@@ -1,3 +1,5 @@
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header"  th:content="${_csrf.headerName}"/>
 <div class="layuimini-container layuimini-page-anim">
     <div class="layuimini-main">
 
@@ -51,6 +53,8 @@
             }
 
         }
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token =$("meta[name='_csrf']").attr("content");
         table.render({
             elem: '#currentTableId',
             url: '[[${#httpServletRequest.getContextPath()}]]/allUntreatedBill',
@@ -90,7 +94,7 @@
                     , yes(index, layero) {
                         $.ajax({
                             url: "[[${#httpServletRequest.getContextPath()}]]/passThrough",
-                            method: "post",
+                            method: "get",
                             data: {
                                 bid: data.bid,
                             },
@@ -134,6 +138,9 @@
                                     reason:reasonData
                                 },
                                 datatype: "json",
+                                beforeSend : function(xhr) {
+                                    xhr.setRequestHeader(header, token);
+                                },
                                 success: function (data) {
                                     //根据后台返回的参数，来进行判断
                                     if (data != null) {
