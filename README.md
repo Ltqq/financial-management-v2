@@ -1,5 +1,5 @@
 # 财务管理系统
-## 主要技术: springboot + springsecurity + mysql + mybatis-plus + thymeleaf + jQuery + layuimini + Tablesaw 
+## 主要技术: springboot + springsecurity + mysql + mybatis-plus + swagger +thymeleaf + jQuery + layuimini + Tablesaw 
 ## 描述:
 根据登陆账户进行权限判断,返回不同菜单界面.
 ### 管理员:
